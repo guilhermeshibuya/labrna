@@ -12,5 +12,6 @@ class WeatherRNN(nn.Module):
 
     def forward(self, x):
         output, _ = self.rnn(x)
-        output = self.fc(output)
-        print(output)
+        output = self.fc(output[:, -1, :])
+        return output
+
