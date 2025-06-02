@@ -21,6 +21,7 @@ class Trainer:
         patience_counter = 0
 
         log_history = []
+        total_time = 0.0
 
         for epoch in range(1, epochs + 1):
             epoch_loss = 0.0
@@ -40,6 +41,7 @@ class Trainer:
             epoch_loss = epoch_loss / len(train_loader)
 
             end_time = time.time()
+            total_time += end_time - start_time
             epoch_mins, epoch_secs = epoch_time(start_time, end_time)
 
             val_loss = None
@@ -89,6 +91,8 @@ class Trainer:
             self.model.load_state_dict(best_model_state)
             if verbose:
                 print(f"Best model loaded (epoch {best_epoch})")
+        if verbose:
+            print('Total time: ', total_time)
         return self.model, log_history
 
     def evaluate(self,  val_loader):

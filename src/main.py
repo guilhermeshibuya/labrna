@@ -3,6 +3,7 @@ from torch.utils.data import DataLoader
 from src.model.model import WeatherRNN
 import pandas as pd
 from src.utils.data import DailyClimateDataset
+from utils.plot import plot_train_val_loss
 from utils.trainer import Trainer
 
 df_train = pd.read_csv(
@@ -46,3 +47,4 @@ loss_fn = torch.nn.MSELoss()
 trainer = Trainer(model, optimizer, loss_fn)
 trained_model, history = trainer.train(train_loader, val_loader, PATIENCE, EPOCHS)
 
+plot_train_val_loss(history)
