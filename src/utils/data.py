@@ -1,6 +1,5 @@
 from sklearn.preprocessing import StandardScaler
 from torch.utils.data import Dataset
-import pandas as pd
 import numpy as np
 import torch
 
@@ -19,7 +18,7 @@ class DailyClimateDataset(Dataset):
         self.X, self.y = self.create_sequences(data, window_size, target_column)
 
         self.X = torch.tensor(self.X, dtype=torch.float32)
-        self.y = torch.tensor(self.y, dtype=torch.float32)
+        self.y = torch.tensor(self.y, dtype=torch.float32).unsqueeze(1)
 
     def create_sequences(self, data, window_size, target_column):
         X, y = [], []
