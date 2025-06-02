@@ -12,7 +12,7 @@ class WeatherRNN(nn.Module):
 
     def forward(self, x):
         h0 = torch.zeros(self.num_layers, x.size(0), self.hidden_size)
-        output, _ = self.rnn(x)
+        output, _ = self.rnn(x, h0)
         output = self.fc(output[:, -1, :])
         return output
 
