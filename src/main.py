@@ -17,8 +17,8 @@ df_test = pd.read_csv(
     index_col='date'
 )
 
-# df_train.drop(columns=['meanpressure'], inplace=True)
-# df_test.drop(columns=['meanpressure'], inplace=True)
+df_train.drop(columns=['meanpressure'], inplace=True)
+df_test.drop(columns=['meanpressure'], inplace=True)
 
 val_ratio = 0.2
 val_size = int(len(df_train) * val_ratio)
@@ -34,12 +34,15 @@ val_loader = DataLoader(val_dataset, batch_size=1)
 
 LEARNING_RATE = 1e-3
 EPOCHS = 300
+PATIENCE = 10
+HIDDEN_SIZE = 16
+INPUT_SIZE = train_dataset.X.shape[2]
 
-model = WeatherRNN(val_dataset.X.shape[2], 32, 1)
-optimizer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
+model = WeatherRNN(INPUT_SIZE, HIDDEN_SIZE, 1)
+optimizer = torch.optim.SGD(model.parameters(), lr=LEARNING_RATE)
 loss_fn = torch.nn.MSELoss()
 
 
 trainer = Trainer(model, optimizer, loss_fn)
-trained_model = trainer.train(train_loader, val_loader, epochs=EPOCHS)
+trained_model, history = trainer.train(train_loader, val_loader, PATIENCE, EPOCHS)
 
