@@ -1,7 +1,6 @@
 import os
 import time
 import torch
-from src.utils.utils import epoch_time
 
 
 class Trainer:
@@ -41,18 +40,18 @@ class Trainer:
             epoch_loss = epoch_loss / len(train_loader)
 
             end_time = time.time()
-            total_time += end_time - start_time
-            epoch_mins, epoch_secs = epoch_time(start_time, end_time)
+            epoch_time = end_time - start_time
+            total_time += epoch_time
 
             val_loss = None
             if val_loader is not None:
                 val_loss, _, _ = self.evaluate(val_loader)
                 val_loss = val_loss.item()
                 if verbose:
-                    print(f"Epoch {epoch} / {epochs} | Epoch Time: {epoch_mins}m {epoch_secs}s - Train Loss: {epoch_loss:.4f} - Val Loss: {val_loss:.4f}")
+                    print(f"Epoch {epoch} / {epochs} | Epoch Time: {epoch_time:.4f}s - Train Loss: {epoch_loss:.4f} - Val Loss: {val_loss:.4f}")
             else:
                 if verbose:
-                    print(f"Epoch {epoch} / {epochs} | Epoch Time: {epoch_mins}m {epoch_secs}s - Train Loss: {epoch_loss:.4f}")
+                    print(f"Epoch {epoch} / {epochs} | Epoch Time: {epoch_time:.4f}s - Train Loss: {epoch_loss:.4f}")
             if val_loss is not None:
                 log_history.append(
                     {

@@ -3,7 +3,7 @@ from torch.utils.data import DataLoader
 from src.model.model import WeatherRNN
 import pandas as pd
 from src.utils.data import DailyClimateDataset
-from utils.plot import plot_train_val_loss
+from utils.plot import plot_train_val_loss, plot_predictions_and_labels
 from utils.trainer import Trainer
 
 df_train = pd.read_csv(
@@ -36,7 +36,7 @@ val_loader = DataLoader(val_dataset, batch_size=1)
 LEARNING_RATE = 1e-3
 EPOCHS = 300
 PATIENCE = 10
-HIDDEN_SIZE = 16
+HIDDEN_SIZE = 100
 INPUT_SIZE = train_dataset.X.shape[2]
 
 model = WeatherRNN(INPUT_SIZE, HIDDEN_SIZE, 1)
@@ -47,4 +47,15 @@ loss_fn = torch.nn.MSELoss()
 trainer = Trainer(model, optimizer, loss_fn)
 trained_model, history = trainer.train(train_loader, val_loader, PATIENCE, EPOCHS)
 
+model.eval()
+with torch.no_grad():
+    outputs = model(test_dataset.X).squeeze()
+    test_loss = loss_fn(outputs, test_dataset.y.squeeze())
+    print(f'Test Loss: {test_loss.item():.4f}')
+
+y_pred = outputs.cpu().detach().numpy()
+y_true_test = test_dataset.y.numpy()
+
+dates = df_test.index[7:]
 plot_train_val_loss(history)
+plot_predictions_and_labels(dates, y_pred, y_true_test)

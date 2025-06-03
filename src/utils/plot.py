@@ -21,3 +21,13 @@ def plot_train_val_loss(log_history):
     plt.tight_layout()
     plt.show()
 
+
+def plot_predictions_and_labels(dates, y_pred, y_true):
+    plt.figure(figsize=(10, 6))
+    plt.plot(dates, y_pred, label='Predictions')
+    plt.plot(dates, y_true, label='Labels')
+    plt.xlabel('Date')
+    plt.ylabel('Meant Temperature')
+    plt.title('Mean Temperature Predictions vs Labels')
+    plt.legend()
+    plt.show()
