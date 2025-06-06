@@ -5,7 +5,7 @@ import torch
 
 
 class DailyClimateDataset(Dataset):
-    def __init__(self, df, window_size=7, target_column=0, scaler=None):
+    def __init__(self, df, window_size: int = 7, target_column: int = 0, scaler=None):
         data = df.values
 
         if scaler is None:
