@@ -45,8 +45,6 @@ class RNN(nn.Module):
                     "h2h": nn.Linear(hidden_size, hidden_size)
                 })
             )
-        # self.i2h = nn.Linear(input_size, hidden_size)
-        # self.h2h = nn.Linear(hidden_size, hidden_size)
         self.h2o = nn.Linear(hidden_size, output_size)
 
     def forward(self, x):

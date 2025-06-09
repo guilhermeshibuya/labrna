@@ -1,6 +1,6 @@
 import torch.optim
 from torch.utils.data import DataLoader
-from torcheval.metrics import R2Score
+from sklearn.metrics import r2_score
 import matplotlib.pyplot as plt
 import seaborn as sns
 from model.model import RNN
@@ -30,12 +30,12 @@ df_test = pd.read_csv(
 # plt.title('Matriz de correlacao')
 # plt.show()
 
-df_train.drop(columns=['meanpressure'], inplace=True)
-df_test.drop(columns=['meanpressure'], inplace=True)
+# df_train.drop(columns=['meanpressure'], inplace=True)
+# df_test.drop(columns=['meanpressure'], inplace=True)
 
 val_ratio = 0.2
 val_size = int(len(df_train) * val_ratio)
-train_part = df_train[:val_size]
+train_part = df_train[:-val_size]
 val_part = df_train[-val_size:]
 
 SEQUENCE_LENGTH = 7
@@ -49,7 +49,7 @@ val_loader = DataLoader(val_dataset, batch_size=1)
 
 LEARNING_RATE = 1e-3
 EPOCHS = 300
-PATIENCE = 10
+PATIENCE = 20
 HIDDEN_SIZE = 16
 OUTPUT_SIZE = 1
 NUM_LAYERS = 1
@@ -65,16 +65,15 @@ loss_fn = torch.nn.MSELoss()
 trainer = Trainer(model, optimizer, loss_fn)
 trained_model, history = trainer.train(train_loader, val_loader, PATIENCE, EPOCHS)
 
-metric = R2Score()
 model.eval()
 with torch.no_grad():
     outputs = model(test_dataset.X).squeeze()
     target = test_dataset.y.squeeze()
     test_loss = loss_fn(outputs, target)
-    metric.update(outputs, target)
-    test_metric = metric.compute()
+
+    r2 = r2_score(outputs, target)
     print(f'Test Loss: {test_loss.item():.4f}')
-    print(f'R2: {test_metric}')
+    print(f'R2: {r2}')
 
 y_pred = outputs.cpu().detach().numpy()
 y_true_test = test_dataset.y.numpy()
