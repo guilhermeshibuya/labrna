@@ -26,6 +26,10 @@ class Trainer:
             epoch_loss = 0.0
             start_time = time.time()
 
+            # for name, param in self.model.named_parameters():
+            #     if param.grad is not None:
+            #         print(f'{name} grad mean: {param.grad.mean()}')
+
             for x, y in train_loader:
                 x, y = x.to(self.device), y.to(self.device)
 

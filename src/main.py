@@ -7,6 +7,7 @@ from model.model import RNN
 import pandas as pd
 from src.utils.data import DailyClimateDataset
 from utils.plot import plot_train_val_loss, plot_predictions_and_labels
+from utils.seed import define_seed
 from utils.trainer import Trainer
 
 df_train = pd.read_csv(
@@ -30,8 +31,10 @@ df_test = pd.read_csv(
 # plt.title('Matriz de correlacao')
 # plt.show()
 
-# df_train.drop(columns=['meanpressure'], inplace=True)
-# df_test.drop(columns=['meanpressure'], inplace=True)
+df_train.drop(columns=['meanpressure'], inplace=True)
+df_test.drop(columns=['meanpressure'], inplace=True)
+
+define_seed(42)
 
 val_ratio = 0.2
 val_size = int(len(df_train) * val_ratio)
@@ -57,7 +60,7 @@ INPUT_SIZE = train_dataset.X.shape[2]
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-model = RNN(INPUT_SIZE, HIDDEN_SIZE, OUTPUT_SIZE, NUM_LAYERS, 'tanh')
+model = RNN(INPUT_SIZE, HIDDEN_SIZE, OUTPUT_SIZE, NUM_LAYERS, 'sigmoid')
 model.to(device)
 optimizer = torch.optim.SGD(model.parameters(), lr=LEARNING_RATE)
 loss_fn = torch.nn.MSELoss()
