@@ -60,7 +60,7 @@ INPUT_SIZE = train_dataset.X.shape[2]
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-model = RNN(INPUT_SIZE, HIDDEN_SIZE, OUTPUT_SIZE, NUM_LAYERS, 'sigmoid')
+model = RNN(INPUT_SIZE, HIDDEN_SIZE, OUTPUT_SIZE, NUM_LAYERS, 'tanh')
 model.to(device)
 optimizer = torch.optim.SGD(model.parameters(), lr=LEARNING_RATE)
 loss_fn = torch.nn.MSELoss()
@@ -68,9 +68,9 @@ loss_fn = torch.nn.MSELoss()
 trainer = Trainer(model, optimizer, loss_fn)
 trained_model, history = trainer.train(train_loader, val_loader, PATIENCE, EPOCHS)
 
-model.eval()
+trained_model.eval()
 with torch.no_grad():
-    outputs = model(test_dataset.X).squeeze()
+    outputs = trained_model(test_dataset.X).squeeze()
     target = test_dataset.y.squeeze()
     test_loss = loss_fn(outputs, target)
 
