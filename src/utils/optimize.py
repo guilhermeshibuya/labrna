@@ -51,7 +51,8 @@ def objective(trial):
     hidden_size = trial.suggest_int("hidden_size", 8, 128)
     num_layers = trial.suggest_int("num_layers", 1, 6)
     activation = trial.suggest_categorical("activation", ["tanh", "sigmoid", "relu"])
-    learning_rate = trial.suggest_float("learning_rate", 1e-5, 1e-1, log=True)
+    # learning_rate = trial.suggest_float("learning_rate", 1e-5, 1e-1, log=True)
+    learning_rate = trial.suggest_loguniform("learning_rate", 1e-5, 1e-1)
 
 
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
