@@ -54,7 +54,6 @@ def objective(trial):
     # learning_rate = trial.suggest_float("learning_rate", 1e-5, 1e-1, log=True)
     learning_rate = trial.suggest_loguniform("learning_rate", 1e-5, 1e-1)
 
-
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=batch_size)
 
